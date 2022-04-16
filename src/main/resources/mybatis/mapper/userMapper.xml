@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nofat.dao.IUserDao">
+    <resultMap id="userResult" type="com.nofat.entity.DO.UserDO">
+        <id property="id" jdbcType="INTEGER" column="id"/>
+        <result property="name" jdbcType="CHAR" column="name"/>
+        <result property="typeId" jdbcType="INTEGER" column="type_id"/>
+        <result property="password" jdbcType="CHAR" column="password"/>
+        <result property="email" jdbcType="VARCHAR" column="email"/>
+        <result property="phone" jdbcType="CHAR" column="phone"/>
+        <result property="wx" jdbcType="VARCHAR" column="wx"/>
+        <result property="sex" jdbcType="CHAR" column="sex"/>
+        <result property="birthday" jdbcType="CHAR" column="birthday"/>
+        <result property="avatar" jdbcType="VARCHAR" column="avatar"/>
+        <result property="intro" jdbcType="VARCHAR" column="intro"/>
+        <result property="coin" jdbcType="INTEGER" column="coin"/>
+        <result property="location" jdbcType="VARCHAR" column="location"/>
+        <result property="createTime" jdbcType="TIMESTAMP" column="create_time"/>
+        <result property="updateTime" jdbcType="TIMESTAMP" column="update_time"/>
+    </resultMap>
+
+    <!-- 判断字段是否为空，决定是否插入该字段 -->
+    <sql id="userColumns">
+        <trim suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="password != null">password,</if>
+            <if test="email != null">email,</if>
+            <if test="typeId != null">,type_id,</if>
+            <if test="phone != null">phone,</if>
+            <if test="wx != null">wx,</if>
+            <if test="sex != null">sex,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="intro != null">intro,</if>
+            <if test="coin != null">coin,</if>
+            <if test="location != null">location,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time</if>
+        </trim>
+    </sql>
+    <sql id="userValues">
+        <trim suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="password != null">#{password},</if>
+            <if test="email != null">#{email},</if>
+            <if test="typeId != null">,#{typeId},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="wx != null">#{wx},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="birthday == null">#{birthday},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="intro != null">#{intro},</if>
+            <if test="coin != null">#{coin},</if>
+            <if test="location != null">#{location},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime}</if>
+        </trim>
+    </sql>
+
+
+    <insert id="saveUser" useGeneratedKeys="true" keyProperty="id" parameterType="com.nofat.entity.DO.UserDO">
+        insert into user(<include refid="userColumns"/>)
+        values(<include refid="userValues"/>)
+    </insert>
+
+    <select id="findAll" resultMap="userResult">
+        select * from user
+    </select>
+
+</mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- 开启注解扫描, 只负责controller -->
+    <context:component-scan base-package="com.nofat.controller"/>
+
+    <!-- 开启SpringMVC框架注解的支持 -->
+    <mvc:annotation-driven>
+        <!-- 消息转换器 -->
+        <mvc:message-converters register-defaults="true">
+            <bean id="messageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <!--  解决响应时中文乱码 -->
+                        <value>text/html;charset=utf-8</value>
+                        <!-- 返回json数据 -->
+                        <value>application/json;charset=utf-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 静态资源 -->
+    <mvc:default-servlet-handler/>
+    <!--<mvc:resources location="static" mapping="/static/**"/>-->
+
+    <!-- 开启视图解析器 -->
+    <!--<bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+    <!--<property name="prefix" value="/WEB-INF/view/"/>-->
+    <!--<property name="suffix" value=".html"/>-->
+    <!--</bean>-->
+
+    <!-- 文件上传配置 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="#{1024*1024*1024}"/>
+    </bean>
+
+    <!-- 读取微信的配置文件 -->
+    <context:property-placeholder location="classpath:wx.properties"/>
+    <bean class="com.nofat.utils.WeChatUtil">
+        <property name="appId" value="${wx.appId}"/>
+        <property name="appSecret" value="${wx.appSecret}"/>
+    </bean>
+
+</beans>
